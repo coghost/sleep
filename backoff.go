@@ -68,11 +68,19 @@ func (s *Sleeper) WithJitter(enable bool) *Sleeper {
 }
 
 // Sleep performs exponential backoff sleep with optional jitter and logging.
+func (s *Sleeper) Sleep() time.Duration {
+	// Calculate base exponential delay
+	actualDelay := s.ExponentialDelay()
+
+	time.Sleep(actualDelay)
+
+	return actualDelay
+}
+
 // When jitter is enabled, the actual sleep time will be between the calculated
 // delay and up to 2x that value.
 // Returns actual sleep duration for information purposes.
-func (s *Sleeper) Sleep() time.Duration {
-	// Calculate base exponential delay
+func (s *Sleeper) ExponentialDelay() time.Duration {
 	baseDelay := time.Duration(math.Min(
 		float64(s.baseDelay)*math.Pow(2, float64(s.attempts)),
 		float64(s.maxDelay),
@@ -94,8 +102,8 @@ func (s *Sleeper) Sleep() time.Duration {
 			zap.Int("attempt", s.attempts+1))
 	}
 
-	time.Sleep(actualDelay)
 	s.attempts++
+
 	return actualDelay
 }
 

@@ -60,6 +60,11 @@ func RandN(n float64) int {
 	return randNS(n)
 }
 
+// PTXs sleeps for a random duration around x seconds, alias of RandN
+func PTXs(n float64) int {
+	return RandN(n)
+}
+
 // PT5s sleeps for a random duration around 5 seconds.
 // @return actual sleep duration in milliseconds
 func PT5s() int {
