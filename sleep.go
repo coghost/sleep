@@ -42,6 +42,12 @@ func RandRange(minNum, maxNum float64, msg ...string) int {
 }
 
 func randNS(num float64, scales ...float64) int {
+	minNum, maxNum := getMinMaxRange(num, scales...)
+
+	return RandRange(minNum, maxNum)
+}
+
+func getMinMaxRange(num float64, scales ...float64) (float64, float64) {
 	scale := 2.0
 	if len(scales) > 0 {
 		scale = scales[0]
@@ -49,8 +55,14 @@ func randNS(num float64, scales ...float64) int {
 
 	minNum := num / scale
 	maxNum := num + num - minNum
+	return minNum, maxNum
+}
 
-	return RandRange(minNum, maxNum)
+// ToRandX1k converts num to a random value of `~num*1000`
+func ToRandX1k(num float64, scales ...float64) int {
+	minNum, maxNum := getMinMaxRange(num, scales...)
+
+	return RandFloatX1k(minNum, maxNum)
 }
 
 // RandN sleeps for a random duration around n seconds.
